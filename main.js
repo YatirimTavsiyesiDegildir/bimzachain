@@ -43,6 +43,13 @@ var initHttpServer = () => {
         console.log('block added: ' + JSON.stringify(newBlock));
         res.send();
     });
+    app.get('/addBlock', function(req, res) {
+        var newBlock = generateNextBlock(req.query.data);
+        addBlock(newBlock);
+        broadcast(responseLatestMsg());
+        console.log('block added: ' + JSON.stringify(newBlock));
+        res.send();
+    });
     app.get('/peers', (req, res) => {
         res.send(sockets.map(s => s._socket.remoteAddress + ':' + s._socket.remotePort));
     });
@@ -51,6 +58,7 @@ var initHttpServer = () => {
         res.send();
     });
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
+
 };
 
 
