@@ -4,8 +4,13 @@ const express = require("express");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const WebSocket = require("ws");
+const https = require("https");
+const fs = require("fs");
+//var privateKey  = fs.readFileSync('privkey.pem', 'utf8');
+//var certificate = fs.readFileSync('fullchain.pem', 'utf8');
+//var credentials = {key: privateKey, cert: certificate};
 
-var http_port = process.env.HTTP_PORT || 3001;
+var http_port = process.env.HTTP_PORT || 3002;
 var p2p_port = process.env.P2P_PORT || 6001;
 var initialPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
@@ -39,6 +44,7 @@ var initHttpServer = () => {
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
     app.post('/addBlock',(req, res) => {
+	console.log(req.body);
         var newBlock = generateNextBlock(req.body.data);
         addBlock(newBlock);
         broadcast(responseLatestMsg());
@@ -53,7 +59,9 @@ var initHttpServer = () => {
         res.send();
     });
     app.listen(http_port, () => console.log('Listening http on port: ' + http_port));
-
+	
+	//var httpsServer = https.createServer(credentials, app);
+	//httpsServer.listen(3001);
 };
 
 
