@@ -32,8 +32,14 @@ var getGenesisBlock = () => {
 var blockchain = [getGenesisBlock()];
 
 var initHttpServer = () => {
-    var app = express();
+    let app = express();
     app.use(bodyParser.json());
+
+    app.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
+    });
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
     app.post('/addBlock', (req, res) => {
