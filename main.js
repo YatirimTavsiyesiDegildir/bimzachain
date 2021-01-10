@@ -35,13 +35,10 @@ var blockchain = [getGenesisBlock()];
 var initHttpServer = () => {
     let app = express();
     app.use(bodyParser.json());
-
-    const corsOptions = {
-        origin: '*',
-    };
+    app.use(cors());
 
     app.get('/blocks', (req, res) => res.send(JSON.stringify(blockchain)));
-    app.post('/addBlock', cors(corsOptions),(req, res) => {
+    app.post('/addBlock',(req, res) => {
         var newBlock = generateNextBlock(req.body.data);
         addBlock(newBlock);
         broadcast(responseLatestMsg());
